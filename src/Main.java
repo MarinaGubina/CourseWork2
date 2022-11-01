@@ -25,6 +25,15 @@ public class Main {
                         case 3:
                             getTask(scanner);
                             break;
+                        case 4:
+                            archiveTask(scanner);
+                            break;
+                        case 5:
+                            changeTask(scanner);
+                            break;
+                        case 6:
+                            sortTask(scanner);
+                            break;
                         case 0:
                             break label;
                     }
@@ -41,7 +50,6 @@ public class Main {
         scanner.nextLine();
         String taskName = scanner.nextLine();
         System.out.print("Введите описание задачи: ");
-        scanner.nextLine();
         String description = scanner.nextLine();
         System.out.print("Выберите тип задачи, 1 - личная, 2 - рабочая: ");
         int t = scanner.nextInt();
@@ -105,7 +113,45 @@ public class Main {
         String d = scanner.next();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate date = LocalDate.parse(d,formatter);
-        System.out.println(taskService.getTaskForDay(date));
+        if(taskService.getTaskForDay(date).size() == 0){
+            System.out.println("< Нет задач на "+ date + " > ");
+        }
+        else {
+            System.out.println("< Список задач на "+ date + " > ");
+            for(int i = 0 ; i < taskService.getTaskForDay(date).size();i++){
+                System.out.println(taskService.getTaskForDay(date).get(i));}
+        }
+    }
+
+    private static void archiveTask(Scanner scanner) {
+        taskService.printArchive();
+    }
+
+    private static void changeTask(Scanner scanner){
+        System.out.print("Введите id задачи, которую необходимо изменить :");
+        int id = scanner.nextInt();
+        System.out.println("1 - поменять название \n"+ "2 - поменять описание");
+        int t = scanner.nextInt();
+        switch (t){
+            case 1:
+                System.out.print("Введите новое название задачи: ");
+                scanner.nextLine();
+                String newTitle = scanner.nextLine();
+                taskService.getMap().get(id).setTitle(newTitle);
+                break;
+            case 2:
+                System.out.print("Введите новое описание задачи: ");
+                scanner.nextLine();
+                String newDescription = scanner.nextLine();
+                taskService.getMap().get(id).setDescription(newDescription);
+                break;
+        }
+    }
+
+    private static void sortTask(Scanner scanner){
+        System.out.print("Введите количество дней, на которое необходимо расписание:");
+        int d = scanner.nextInt();
+        taskService.sortTask(d);
     }
 
     private static void printMenu() {
@@ -113,6 +159,9 @@ public class Main {
                         "1. Добавить задачу \n" +
                         "2. Удалить задачу \n" +
                         "3. Получить задачу на указанный день \n" +
+                        "4. Получить архив удаленных задач \n" +
+                        "5. Редактировать задачу \n" +
+                        "6. Вывести список задач, отсортированных по датам \n" +
                         "0. Выход \n");
     }
 }
