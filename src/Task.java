@@ -1,24 +1,20 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-public class Task {
+public abstract class Task{
 
     private final TypeOfTask type;
-    private final Repeatable repeatable;
     private String title;
     private String description;
     private LocalDateTime dateTime;
     private int id;
     private static int count;
 
-    public Task(String title, String description,TypeOfTask type,Repeatable repeatable, LocalDateTime dateTime) {
+    public Task(String title, String description, TypeOfTask type, LocalDateTime dateTime) {
         setTitle(title);
         setDescription(description);
         this.type = type;
-        this.repeatable = repeatable;
         this.dateTime = dateTime;
         id = count++;
     }
@@ -63,43 +59,8 @@ public class Task {
         return type;
     }
 
-    public Repeatable getRepeatable() {
-        return repeatable;
-    }
-
     private boolean isNullOrEmpty(String val){
         return val.isBlank() && val == null;
-    }
-
-    public boolean appearTask(LocalDate date){
-        LocalDateTime localDateTime = dateTime;
-        switch (repeatable) {
-            case SINGLE_Task:
-                return dateTime.toLocalDate().isEqual(date);
-
-            case DAILY_Task:
-                return dateTime.toLocalDate().isBefore(date);
-
-            case WEEKLY_Task:
-                while (localDateTime.toLocalDate().isBefore(date)&&
-                        !localDateTime.toLocalDate().isEqual(date)){
-                    localDateTime = localDateTime.plusWeeks(1);
-                }
-                return localDateTime.toLocalDate().isEqual(date);
-            case MONTHLY_Task:
-                while (localDateTime.toLocalDate().isBefore(date)&&
-                        !localDateTime.toLocalDate().isEqual(date)){
-                    localDateTime = localDateTime.plusMonths(1);
-                }
-                return localDateTime.toLocalDate().isEqual(date);
-            case YEARLY_TASK:
-                while (localDateTime.toLocalDate().isBefore(date)&&
-                        !localDateTime.toLocalDate().isEqual(date)){
-                    localDateTime = localDateTime.plusYears(1);
-                }
-                return localDateTime.toLocalDate().isEqual(date);
-        }
-        return false;
     }
 
     @Override
@@ -117,8 +78,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return  " { Задача: " + title + " , описание: " + description +
-                ", тип:" + type.getTitle() +", повторяемость: " +
-                repeatable.getStr() + ", дата и время: " + dateTime.toString() +" }";
+        return  " Задача: " + title + " , описание: " + description +
+                ", тип:" + type.getTitle() + ", дата и время: " + dateTime.toString();
     }
+
+    public abstract boolean appearTask(LocalDate date);
 }

@@ -63,41 +63,42 @@ public class Main {
         else {
             System.out.println("неверный формат");
         }
-        Repeatable repeatable = null;
+        System.out.print("Введите дату и время задачи в формате yyyy-MM-dd;HH:mm :");
+        String dT = scanner.next();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd;HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(dT,formatter);
         System.out.print("Повторяемость задачи: O - однократная,D - ежедневная, W - еженедельная," +
                 "M - ежемесячная, Y - ежегодная : ");
         String r = scanner.next();
         switch (r){
             case "O":
-                repeatable = Repeatable.SINGLE_Task;
+                SingleTask singleTask = new SingleTask(taskName,description,type,dateTime);
+                taskService.addTask(singleTask);
                 break;
 
             case "D":
-                repeatable= Repeatable.DAILY_Task;
+                DailyTask dailyTask = new DailyTask(taskName,description,type,dateTime);
+                taskService.addTask(dailyTask);
                 break;
 
             case "W":
-                repeatable= Repeatable.WEEKLY_Task;
+                WeeklyTask weeklyTask = new WeeklyTask(taskName,description,type,dateTime);
+                taskService.addTask(weeklyTask);
                 break;
 
             case "M":
-                repeatable = Repeatable.MONTHLY_Task;
+                MonthlyTask monthlyTask = new MonthlyTask(taskName,description,type,dateTime);
+                taskService.addTask(monthlyTask);
                 break;
 
             case "Y":
-                repeatable = Repeatable.YEARLY_TASK;
+                YearlyTask yearlyTask = new YearlyTask(taskName,description,type,dateTime);
+                taskService.addTask(yearlyTask);
                 break;
 
             default:
                 System.out.println("неверный формат");
         }
-        System.out.print("Введите дату и время задачи в формате yyyy-MM-dd;HH:mm :");
-        String dT = scanner.next();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd;HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(dT,formatter);
-        
-        Task task = new Task(taskName,description,type,repeatable,dateTime);
-        taskService.addTask(task);
         taskService.printTest();
     }
 

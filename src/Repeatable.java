@@ -1,18 +1,5 @@
-public enum Repeatable {
+import java.time.LocalDate;
 
-    SINGLE_Task("однократная"),
-    DAILY_Task("ежедневная"),
-    WEEKLY_Task("еженедельная"),
-    MONTHLY_Task("ежемесячная"),
-    YEARLY_TASK("ежегодная");
-
-    private String str;
-
-    Repeatable(String str) {
-        this.str = str;
-    }
-
-    public String getStr() {
-        return str;
-    }
+public interface Repeatable {
+    boolean appearTask(LocalDate date);
 }
